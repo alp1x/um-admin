@@ -10,6 +10,7 @@
 #### ⚠️Important: web > config.js > ```UMAdmin.SteamWebAPI = "" ``` paste webapikey from server.cfg here
 #### ⚠️Version [Beta]: Devs,Bans,Peds in development
 #### ⚠️You can report bugs for beta
+#### ⚠️ command: /admin but first stop qb-adminmenu
 
 ### Tested version
 * qb-core 1.2.1
