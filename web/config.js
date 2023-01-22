@@ -1,6 +1,6 @@
 UMAdmin = {}
 
-UMAdmin.SteamWebAPI = "7D51A7A6BEE63634C985114B0104A1A4"
+UMAdmin.SteamWebAPI = "herekey"
 
 UMAdmin.Lang = {
     general: {
