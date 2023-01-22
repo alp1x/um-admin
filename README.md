@@ -7,11 +7,13 @@
 
 <img src="https://cdn.discordapp.com/attachments/627254815252152331/1066751247283130469/209208440-0d2eddef-dec1-41f6-a79a-09ae9edbbb7b_kopya.png">
 
-#### ⚠️Version [Beta]: Devs,Bans,Peds in development
 #### ⚠️Important: web > config.js > ```UMAdmin.SteamWebAPI = "" ``` paste webapikey from server.cfg here
+#### ⚠️Version [Beta]: Devs,Bans,Peds in development
+#### ⚠️You can report bugs for beta
 
-## @ref
+## @
 * https://github.com/qbcore-framework/qb-adminmenu
 * https://github.com/ChatDisabled/dc-adminmenu
 * https://github.com/tabarra/txAdmin
-* **Color Palette**: https://github.com/Project-Sloth
+* https://github.com/Project-Sloth
+* https://github.com/kerimtonkaz
