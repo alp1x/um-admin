@@ -1,0 +1,219 @@
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>UM Admin</title>
+      <link rel="stylesheet" href="main.css">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js"></script>
+   </head>
+   <body>
+      <div class="panel animate__animated animate__faster" v-if="panel" :class="{animate__fadeIn: panel}">
+         <div class="sidebar">
+            <img src="logo.png">
+            <li @click="pageReset('dashboard')"><i class="fa-solid fa-house-chimney"></i> {{lang.general.dashboard}}</li>
+            <li @click="pageResetEvent('um-admin:nuicallback:getPlayers', 'players', '')"><i class="fa-solid fa-user-group"></i> {{lang.general.players}}</li>
+            <li @click="pageReset('server')"><i class="fa-solid fa-server"></i> {{lang.general.server}}</li>
+            <li @click="pageResetEvent('um-admin:nuicallback:getVehicles', 'vehpage', '')"><i class="fa-solid fa-car"></i> {{lang.general.vehicles}}</li>
+            <li><i style="background: #ffbc00;" class="fa-solid fa-code"></i> {{lang.general.devs}}</li>
+            <li><i style="background: #ffbc00;" class="fa-solid fa-ban"></i> {{lang.general.bans}}</li>
+            <li><i style="background: #ffbc00;" class="fa-solid fa-person"></i> {{lang.general.peds}}</li>
+            <li @click="minPage(false,true,'setMinPage')"><i class="fa-solid fa-minimize"></i> {{lang.general.minpage}}</li>
+         </div>
+         <div class="page">
+            <div id="dashboard" v-if="dashboard">
+               <div class="title">
+                  <h1> {{lang.general.dashboard}}</h1>
+               </div>
+               <div class="card">
+                  <i class="fa-solid fa-users"></i>
+                  <h2> {{lang.general.players}}</h2>
+                  <button>{{totalonline}} online</button>
+               </div>
+               <div class="card">
+                  <i class="fa-solid fa-sack-dollar"></i>
+                  <h2>{{lang.general.totalcash}}</h2>
+                  <button @click="actionEvent(['server','um-admin:server:getMoney', 'cash'])">{{totalcash}} $</button>
+               </div>
+               <div class="card">
+                  <i class="fa-solid fa-piggy-bank"></i>
+                  <h2>{{lang.general.totalbank}}</h2>
+                  <button @click="actionEvent(['server','um-admin:server:getMoney', 'bank'])">{{totalbank}} $</button>
+               </div>
+               <div class="announce">
+                  <h3><i class="fa-solid fa-bullhorn"></i> {{lang.general.announce}}</h3>
+                  <input v-model="announce" type="textarea" placeholder="Announce message">
+                  <button @click="actionEvent(['command','announce', announce]), announce = '' ">send announce</button>
+               </div>
+               <div class="announce">
+                  <h3><i class="fa-solid fa-triangle-exclamation"></i> {{lang.general.kickall}}</h3>
+                  <input v-model="kickallreason" type="textarea" placeholder="Kick all reason">
+                  <button @click="actionEvent(['command','kickall', kickallreason]), kickallreason = '' ">kick all players</button>
+               </div>
+            </div>
+            <div id="players" v-if="players">
+               <div class="title">
+                  <h1>{{lang.general.players}}</h1>
+               </div>
+               <div class="search"> <input type="search" placeholder="Search.." v-model="search" name="search"></div>
+               <div class="profile-card" v-for="players in allPlayers" :key="players.id" @click="pageResetEvent('um-admin:nuicallback:getPlayerProfile', 'players', players.id)">
+                  <i class="fa-solid fa-user"></i>
+                  <h5 style="height: 20px;">{{ players.id }} | {{ players.name }}</h5>
+                  <small>ping: {{players.currentping}}</small>
+               </div>
+            </div>
+            <div id="players_profile" v-if="playersprofile">
+               <div class="title">
+                  <h1>@{{ppdata.name}}</h1>
+               </div>
+               <div class="profile">
+                  <div class="profileimg"><img :src="discord.avatar" alt=""></div>
+                  <div class="name">{{ppdata.name}}</div>
+                  <div class="status mt-1">
+                     <li><i id="food" class="fa-solid fa-burger"></i> {{ppdata.status.food}}</li>
+                     <li><i id="water" class="fa-solid fa-bottle-water"></i> {{ppdata.status.water}}</li>
+                     <li><i id="armor" class="fa-solid fa-shield-halved"></i> {{ppdata.status.armor}}</li>
+                     <li><i id="stress" class="fa-solid fa-brain"></i> {{ppdata.status.stress}}</li>
+                  </div>
+                  <div id="cid" class="profile-card" aria-label="@ copy citizenid" data-cooltipz-dir="top" @click="copyToClipboard(ppdata.citizenid)"><small><i class="fa-solid fa-q"></i> {{ppdata.citizenid}}</small></div>
+                  <div id="rockstar" class="profile-card" aria-label="@ copy license id" data-cooltipz-dir="top" @click="copyToClipboard(ppdata.license)"><small><i class="fa-solid fa-star"></i> {{ppdata.license}}</small></div>
+                  <div id="steam" class="profile-card" aria-label="@ copy steam hex" data-cooltipz-dir="top" @click="copyToClipboard(ppdata.steam)">
+                     <img :src="steam.avatar">
+                     <div><i class="fa-brands fa-steam"></i> {{steam.name}}</div>
+                     <div><small>{{ppdata.steam}}</small></div>
+                  </div>
+                  <div id="discord" class="profile-card" aria-label="@ copy discord id" data-cooltipz-dir="top"  v-bind:style="{ 'background': 'url(' + discord.banner + ')' }"  @click="copyToClipboard(ppdata.discord)">
+                     <img :src="discord.avatar" class="avatar">
+                     <div><i class="fa-brands fa-discord"></i>  {{discord.name}}</div>
+                     <div><small>{{ppdata.discord}}</small></div>
+                  </div>
+               </div>
+               <div class="profile_account_info">
+                  <div class="profile-card"><i class="fa-solid fa-money-bill-trend-up"></i> Cash: {{ppdata.cash}}$</div>
+                  <div class="profile-card"><i class="fa-solid fa-building-columns"></i> Bank: {{ppdata.bank}}$</div>
+                  <div class="profile-card"><i class="fa-solid fa-suitcase"></i> Job: {{ppdata.job}}</div>
+                  <div class="profile-card"><i class="fa-solid fa-gun"></i> Gang: {{ppdata.gang}}</div>
+                  <div class="profile-card"><i class="fa-solid fa-phone"></i> Number: {{ppdata.phone}}</div>
+               </div>
+               <div class="profile_actions_user">
+                  <div class="profile-card w-2" aria-label="kill" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','kill',ppdata.player])"><i class="fa-solid fa-skull"></i> </div>
+                  <div class="profile-card w-2" aria-label="revive" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','revive',ppdata.player])"><i class="fa-solid fa-suitcase-medical"></i> </div>
+                  <div class="profile-card w-2" aria-label="freeze" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','freeze',ppdata.player])"><i class="fa-regular fa-snowflake"></i> </div>
+                  <div class="profile-card w-2" aria-label="spectate" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','spectate',ppdata.player])"><i class="fa-solid fa-eye"></i> </div>
+                  <div class="profile-card w-2" aria-label="goto" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','goto',ppdata.player])"><i class="fa-solid fa-right-to-bracket"></i> </div>
+                  <div class="profile-card w-2" aria-label="bring" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','bring',ppdata.player])"><i class="fa-solid fa-right-left"></i> </div>
+                  <div class="profile-card w-2" aria-label="intovehicle" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','intovehicle',ppdata.player])"><i class="fa-solid fa-car"></i> </div>
+                  <div class="profile-card w-2" aria-label="inventory" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','inventory',ppdata.player])"><i class="fa-solid fa-toolbox"></i> </div>
+                  <div class="profile-card w-2" aria-label="cloth" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','cloth',ppdata.player])"><i class="fa-solid fa-shirt"></i></div>
+                  <div class="profile-card w-2" aria-label="kick" data-cooltipz-dir="bottom" @click="kick = !kick"><i class="fa-solid fa-triangle-exclamation"></i> </div>
+                  <div class="profile-card w-2" aria-label="ban" data-cooltipz-dir="bottom" @click="ban = !ban"><i class="fa-solid fa-ban"></i> </div>
+                  <div class="profile-card w-2" aria-label="perm" data-cooltipz-dir="bottom" @click="perm = !perm"><i class="fa-solid fa-barcode"></i> </div>
+               </div>
+               <div v-if="kick" class="profile-card">
+                  <div class="titlemodal">
+                     <h5><i class="fa-solid fa-triangle-exclamation"></i> Kick Reason</h5>
+                  </div>
+                  <input type="text" v-model="reason" name="kick" class="modalinput" placeholder="Kick Reason..">
+                  <button @click="actionEvent(['kickorban','kick',ppdata.player,reason])">Kick</button>
+               </div>
+               <div v-if="ban" class="profile-card">
+                  <div class="titlemodal">
+                     <h5><i class="fa-solid fa-ban"></i> Ban Reason</h5>
+                  </div>
+                  <select v-model="selectedBan">
+                     <option :value="86400">1 Day</option>
+                     <option :value="604800">1 Week</option>
+                     <option :value="32140800">1 Year</option>
+                     <option :value="99999999999">Perma</option>
+                  </select>
+                  <input type="text" v-model="reason" name="ban" class="modalinput" placeholder="Ban Reason..">
+                  <button @click="actionEvent(['kickorban','ban',ppdata.player,selectedBan,reason])">Ban</button>
+               </div>
+               <div v-if="perm" class="profile-card">
+                  <div class="titlemodal">
+                     <h5><i class="fa-solid fa-ban"></i> Permissions</h5>
+                  </div>
+                  <select v-model="selectedPerm">
+                     <option :value="{rank: 'user', label: 'User'}">User</option>
+                     <option :value="{rank: 'admin', label: 'Admin'}">Admin</option>
+                     <option :value="{rank:'god', label: 'God'}">God</option>
+                  </select>
+                  <button @click="actionEvent(['kickorban','setPermissions',ppdata.player,selectedPerm])">Set Perm</button>
+               </div>
+            </div>
+            <div id="server" v-if="server">
+               <div class="title">
+                  <h1>Server</h1>
+               </div>
+               <div class="card">
+                  <div class="weather">
+                     <h3>Weather sync</h3>
+                     <select v-model="selected" @change="actionEvent(['server','qb-weathersync:server:setWeather', selected])">
+                        <option v-for="(item,index) in lang.weather" :value="index" >{{ item }}</option>
+                     </select>
+                  </div>
+                  <div class="time">
+                     <h3>Time sync</h3>
+                     <button class="mt-1" v-for="(item,index) in lang.time" :value="index" @click="actionEvent(['command',index, ''])">{{ item }}</button>
+                  </div>
+               </div>
+            </div>
+            <div id="vehicles" v-if="vehpage">
+               <div class="title">
+                  <h1>{{lang.general.vehicles}}</h1>
+               </div>
+               <div class="profile-card" v-for="(k,v) in vehicles" @click="getVehicleList(k)">
+                  <i class="fa-solid fa-tags"></i>
+                  <h5>{{ v }}</h5>
+                  <small></small>
+               </div>
+            </div>
+            <div v-if="vehlist">
+               <div class="title">
+                  <h1>Vehicle Category</h1>
+               </div>
+               <div class="profile-card" v-for="(k,v) in vehiclelist" @click="actionEvent(['command','car',v])">
+                  <h5> <i class="fa-solid fa-tags"></i> {{k.category}}</h5>
+                  <img id="car" :src="'https://gtahash.ru/cars/' + k.category + '/' + v + '.jpg'" @error="(e)=>{e.target.src = 'no-image.jpg'}">
+                  <h5><i class="fa-solid fa-car-side"></i> Model: {{ v }}</h5>
+                  <small>@spawn {{v}}</small>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="panel-min animate__animated animate__faster " v-if="minpage" :class="{animate__fadeIn: minpage}">
+         <div class="minpage">
+            <img src="logo.png">
+            <h5>um-admin | min page tools</h5>
+            <div class="action-minpage-list">
+               <div class="action-minpage-list">
+                  <button @click="actionEvent(['command','noclip', ''])">{{lang.minpage.noclip}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:reviveSelf'])">{{lang.minpage.revive}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:invisible'])">{{lang.minpage.invisible}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:godMode'])">{{lang.minpage.godmode}}</button>
+                  <button @click="actionEvent(['command','blips', ''])">{{lang.minpage.blips}}</button>
+                  <button @click="actionEvent(['command','names', ''])">{{lang.minpage.names}}</button>
+                  <button @click="actionEvent(['command','setspeed', ''])">{{lang.minpage.fastspeed}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:infiniteAmmo'])">{{lang.minpage.infiniteammo}}</button>
+                  <hr>
+                  <button @click="actionEvent(['command','fix', ''])">{{lang.minpage.fixvehicle}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:maxmodVehicle', ''])">{{lang.minpage.maxmodvehicle}}</button>
+                  <button @click="actionEvent(['command','admincar', ''])">{{lang.minpage.buyvehicle}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:vehicleGodMode', ''])">{{lang.minpage.godmodeveh}}</button>
+                  <hr>
+                  <button @click="actionEvent(['command','vector2', ''])">{{lang.minpage.copyvector2}}</button>
+                  <button @click="actionEvent(['command','vector3', ''])">{{lang.minpage.copyvector3}}</button>
+                  <button @click="actionEvent(['command','vector4', ''])">{{lang.minpage.copyvector4}}</button>
+                  <button @click="actionEvent(['command','heading'])">{{lang.minpage.heading}}</button>
+               </div>
+            </div>
+            <hr>
+            <div class="footer">
+               <small @click="minPage(true,false,'toFullPage')"><i class="fa-solid fa-expand" style="color: var(--green);"></i>  FULL PAGE</small>
+            </div>
+         </div>
+      </div>
+   </body>
+   <script src="config.js"></script>
+   <script src="app.js"></script>
+</html>
