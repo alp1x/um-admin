@@ -1,5 +1,5 @@
 -- Variables
-
+local QBCore = exports['qb-core']:GetCoreObject()
 local blockedPeds = {
     "mp_m_freemode_01",
     "mp_f_freemode_01",
