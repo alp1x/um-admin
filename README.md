@@ -7,10 +7,12 @@
 
 <img src="https://cdn.discordapp.com/attachments/627254815252152331/1066751247283130469/209208440-0d2eddef-dec1-41f6-a79a-09ae9edbbb7b_kopya.png">
 
+#### ⚠️ [um-admin wiki](https://github.com/alp1x/um-admin/wiki )
 #### ⚠️Important: web > config.js > ```UMAdmin.SteamWebAPI = "" ``` paste webapikey from server.cfg here
 #### ⚠️Version [Beta]: Devs,Bans,Peds in development
 #### ⚠️You can report bugs for beta
 #### ⚠️ command: /admin but first stop qb-adminmenu
+
 
 ### Tested version
 * qb-core 1.2.1
