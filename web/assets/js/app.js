@@ -93,24 +93,20 @@ const adminPanel = Vue.createApp({
             switch (d.type) {
                 case "panel":
                     this.totalonline = d.result,
-                        this.panel = true
+                    this.panel = true
                     break;
                 case "getplayers":
-                    this.allplayers = d.players,
-                        this.dashboard = false,
-                        this.players = true
+                    this.allplayers = d.players
                     break;
                 case "playerprofile":
                     this.ppdata = d.data
-                    this.players = false
-                    this.dashboard = false
                     this.fetchAsync(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${this.steamapi}&steamids=${d.data.steampic}`)
                         .then((value) => {
                             this.steam.avatar = value.response.players[0].avatar
                             this.steam.name = value.response.players[0].personaname
                         })
                         .catch(() => {
-                            this.steam.avatar = "no-image.jpg"
+                            this.steam.avatar = "assets/img/no-image.jpg"
                             this.steam.name = "no steam"
                         });
                     this.fetchAsync(`https://discordlookup.mesavirep.xyz/v1/${d.data.discordpic}`)
@@ -118,14 +114,13 @@ const adminPanel = Vue.createApp({
                             this.discord.avatar = value.avatar["link"]
                             this.discord.banner = value.banner["link"]
                             this.discord.name = value.tag
-                            this.playersprofile = true
                         })
                         .catch(() => {
-                            this.discord.avatar = "no-image.jpg"
+                            this.discord.avatar = "assets/img/no-image.jpg"
                             // this.discord.banner = "no-image.jpg"
                             this.discord.name = "no discord"
-                            this.playersprofile = true
                         });
+                        this.playersprofile = true
                     break;
                 case "vehicles":
                     this.vehicles = d.vehicles

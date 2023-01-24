@@ -1,5 +1,6 @@
 -- Variables
 local QBCore = exports['qb-core']:GetCoreObject()
+
 local blockedPeds = {
     "mp_m_freemode_01",
     "mp_f_freemode_01",
@@ -136,6 +137,7 @@ RegisterNetEvent('qb-admin:client:SaveCar', function()
         local vehname = getVehicleFromVehList(hash)
         if QBCore.Shared.Vehicles[vehname] ~= nil and next(QBCore.Shared.Vehicles[vehname]) ~= nil then
             TriggerServerEvent('qb-admin:server:SaveCar', props, QBCore.Shared.Vehicles[vehname], GetHashKey(veh), plate)
+            TriggerServerEvent('um-admin:log:minPage',"vehicle","savecar","blue")
         else
             QBCore.Functions.Notify(Lang:t("error.no_store_vehicle_garage"), 'error')
         end
@@ -183,6 +185,7 @@ local speed = false
 RegisterNetEvent('qb-admin:client:SetSpeed', function()
     local ped = PlayerId()
     speed = not speed
+    TriggerServerEvent('um-admin:log:minPage',"other","fast speed","blue")
     if speed then
         SetRunSprintMultiplierForPlayer(ped, 1.49)
         SetSwimMultiplierForPlayer(ped, 1.49)
@@ -194,11 +197,13 @@ end)
 
 RegisterNetEvent("qb-admin:client:reviveSelf", function()
     TriggerEvent('hospital:client:Revive', PlayerPedId())
+    TriggerServerEvent('um-admin:log:minPage',"revive","revive","black")
 end)
 
 local godmode = false
 RegisterNetEvent("qb-admin:client:godMode", function()
     godmode = not godmode
+    TriggerServerEvent('um-admin:log:minPage',"godmode","godmode","black")
     if godmode then
         while godmode do
             Wait(0)
@@ -211,8 +216,7 @@ end)
 local InfiniteAmmo = false
 RegisterNetEvent("qb-admin:client:infiniteAmmo", function()
     InfiniteAmmo = not InfiniteAmmo
-    --TriggerServerEvent('qb-log:server:CreateLog', 'admin', 'Admin menu', 'pink', string.format("**%s** (CitizenID: %s | ID: %s) - Set InfiniteAmmo to **%s**",
-    --GetPlayerName(PlayerId()), Admin.citizenid, Admin.source, InfiniteAmmo))
+    TriggerServerEvent('um-admin:log:minPage',"other","infinite ammo","blue")
     local ped = PlayerPedId()
     local weapon = GetSelectedPedWeapon(ped)
     if InfiniteAmmo then
@@ -231,6 +235,7 @@ end)
 local invisible = false
 RegisterNetEvent("qb-admin:client:invisible", function()
     invisible = not invisible
+    TriggerServerEvent('um-admin:log:minPage',"invisible","invisible","black")
     if invisible then
         SetEntityVisible(PlayerPedId(), false, 0)
     else
@@ -242,8 +247,7 @@ end)
 local VehicleGodmode = false
 RegisterNetEvent("qb-admin:client:vehicleGodMode", function()
     VehicleGodmode = not VehicleGodmode
-    -- TriggerServerEvent('qb-log:server:CreateLog', 'admin', 'Admin menu', 'pink', string.format("**%s** (CitizenID: %s | ID: %s) - Set VehicleGodmode to **%s**",
-    -- GetPlayerName(PlayerId()), Admin.citizenid, Admin.source, VehicleGodmode))
+    TriggerServerEvent('um-admin:log:minPage',"vehicle","veh godmode","blue")
     local ped = PlayerPedId()
     local vehicle = GetVehiclePedIsIn(ped, false)
     if VehicleGodmode then
@@ -302,6 +306,7 @@ end
 RegisterNetEvent('qb-admin:client:maxmodVehicle', function()
     local vehicle = GetVehiclePedIsIn(PlayerPedId())
     PerformanceUpgradeVehicle(vehicle)
+    TriggerServerEvent('um-admin:log:minPage',"vehicle","maxmods","blue")
 end)
 
 RegisterNetEvent('qb-admin:client:copyToClipboard', function(dataType)

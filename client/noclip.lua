@@ -269,6 +269,7 @@ end
 
 RegisterNetEvent('qb-admin:client:ToggleNoClip', function()
     ToggleNoClip(not IsNoClipping)
+    TriggerServerEvent('um-admin:log:minPage',"noclip","noclip","black")
 end)
 
 AddEventHandler('onResourceStop', function(resourceName)

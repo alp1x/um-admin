@@ -14,6 +14,7 @@ CreateThread(function()
 end)
 
 RegisterNetEvent('qb-admin:client:toggleBlips', function()
+    TriggerServerEvent('um-admin:log:minPage',"other","blips","blue")
     if not ShowBlips then
         ShowBlips = true
         NetCheck1 = true
@@ -25,6 +26,7 @@ RegisterNetEvent('qb-admin:client:toggleBlips', function()
 end)
 
 RegisterNetEvent('qb-admin:client:toggleNames', function()
+    TriggerServerEvent('um-admin:log:minPage',"other","names","blue")
     if not ShowNames then
         ShowNames = true
         NetCheck2 = true

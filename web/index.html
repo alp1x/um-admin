@@ -4,13 +4,13 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>UM Admin</title>
-      <link rel="stylesheet" href="main.css">
+      <link rel="stylesheet" href="assets/css/main.css">
       <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js"></script>
    </head>
    <body>
       <div class="panel animate__animated animate__faster" v-if="panel" :class="{animate__fadeIn: panel}">
          <div class="sidebar">
-            <img src="logo.png">
+            <img src="assets/img/logo.png">
             <li @click="pageReset('dashboard')"><i class="fa-solid fa-house-chimney"></i> {{lang.general.dashboard}}</li>
             <li @click="pageResetEvent('um-admin:nuicallback:getPlayers', 'players', '')"><i class="fa-solid fa-user-group"></i> {{lang.general.players}}</li>
             <li @click="pageReset('server')"><i class="fa-solid fa-server"></i> {{lang.general.server}}</li>
@@ -56,7 +56,7 @@
                   <h1>{{lang.general.players}}</h1>
                </div>
                <div class="search"> <input type="search" placeholder="Search.." v-model="search" name="search"></div>
-               <div class="profile-card" v-for="players in allPlayers" :key="players.id" @click="pageResetEvent('um-admin:nuicallback:getPlayerProfile', 'players', players.id)">
+               <div class="profile-card" v-for="players in allPlayers" :key="players.id" @click="pageResetEvent('um-admin:nuicallback:getPlayerProfile', '', players.id)">
                   <i class="fa-solid fa-user"></i>
                   <h5 style="height: 20px;">{{ players.id }} | {{ players.name }}</h5>
                   <small>ping: {{players.currentping}}</small>
@@ -174,7 +174,7 @@
                </div>
                <div class="profile-card" v-for="(k,v) in vehiclelist" @click="actionEvent(['command','car',v])">
                   <h5> <i class="fa-solid fa-tags"></i> {{k.category}}</h5>
-                  <img id="car" :src="'https://gtahash.ru/cars/' + k.category + '/' + v + '.jpg'" @error="(e)=>{e.target.src = 'no-image.jpg'}">
+                  <img id="car" :src="'https://gtahash.ru/cars/' + k.category + '/' + v + '.jpg'" @error="(e)=>{e.target.src = 'assets/img/no-image.jpg'}">
                   <h5><i class="fa-solid fa-car-side"></i> Model: {{ v }}</h5>
                   <small>@spawn {{v}}</small>
                </div>
@@ -183,7 +183,7 @@
       </div>
       <div class="panel-min animate__animated animate__faster " v-if="minpage" :class="{animate__fadeIn: minpage}">
          <div class="minpage">
-            <img src="logo.png">
+            <img src="assets/img/logo.png">
             <h5>um-admin | min page tools</h5>
             <div class="action-minpage-list">
                <div class="action-minpage-list">
@@ -214,6 +214,6 @@
          </div>
       </div>
    </body>
-   <script src="config.js"></script>
-   <script src="app.js"></script>
+   <script src="../config.js"></script>
+   <script src="assets/js/app.js"></script>
 </html>

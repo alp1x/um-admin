@@ -53,7 +53,7 @@ local function BanPlayer(src)
         2147483647,
         'qb-adminmenu'
     })
-    TriggerEvent('qb-log:server:CreateLog', 'adminmenu', 'Player Banned', 'red', string.format('%s was banned by %s for %s', GetPlayerName(src), 'qb-adminmenu', "Trying to trigger admin options which they dont have permission for"), true)
+    TriggerEvent('um-admin:log:playersEvent',src,"cheater","Banned Cheater \n Trying to trigger admin options which they dont have permission for","red",src)
     DropPlayer(src, 'You were permanently banned by the server for: Exploiting')
 end
 
@@ -67,6 +67,7 @@ RegisterNetEvent('qb-admin:server:kill', function(player)
     local src = source
     if QBCore.Functions.HasPermission(src, permissions['kill']) or IsPlayerAceAllowed(src, 'command')  then
         TriggerClientEvent('hospital:client:KillPlayer', player)
+        TriggerEvent('um-admin:log:playersEvent',src,"kill","Killed".."["..player.."]","black",player)
     else
         BanPlayer(src)
     end
@@ -76,6 +77,7 @@ RegisterNetEvent('qb-admin:server:revive', function(player)
     local src = source
     if QBCore.Functions.HasPermission(src, permissions['revive']) or IsPlayerAceAllowed(src, 'command')  then
         TriggerClientEvent('hospital:client:Revive', player)
+        TriggerEvent('um-admin:log:playersEvent',src,"revivep","Revive".."["..player.."]","black",player)
     else
         BanPlayer(src)
     end
@@ -84,7 +86,7 @@ end)
 RegisterNetEvent('qb-admin:server:kick', function(data)
     local src = source
     if QBCore.Functions.HasPermission(src, permissions['kick']) or IsPlayerAceAllowed(src, 'command')  then
-        TriggerEvent('qb-log:server:CreateLog', 'bans', 'Player Kicked', 'red', string.format('%s was kicked by %s for %s', GetPlayerName(data[3]), GetPlayerName(src), data[4]), true)
+        TriggerEvent('um-admin:log:playersEvent',src,"kick","Kicked".."["..data[3].."] \n Reason: "..data[4],"yellow",data[3])
         DropPlayer(data[3], Lang:t("info.kicked_server") .. ':\n' .. data[4] .. '\n\n' .. Lang:t("info.check_discord") .. QBCore.Config.Server.Discord)
     else
         BanPlayer(src)
@@ -113,7 +115,7 @@ RegisterNetEvent('qb-admin:server:ban', function(data)
             template = "<div class=chat-message server'><strong>ANNOUNCEMENT | {0} has been banned:</strong> {1}</div>",
             args = {GetPlayerName(data[3]), data[5]}
         })
-        TriggerEvent('qb-log:server:CreateLog', 'bans', 'Player Banned', 'red', string.format('%s was banned by %s for %s', GetPlayerName(data[3]), GetPlayerName(src), data[5]), true)
+        TriggerEvent('um-admin:log:playersEvent',src,"ban","Banned".."["..data[3].."] \n Reason: "..data[5],"red",data[3])
         if banTime >= 2147483647 then
             DropPlayer(data[3], Lang:t("info.banned") .. '\n' .. data[5] .. Lang:t("info.ban_perm") .. QBCore.Config.Server.Discord)
         else
@@ -130,6 +132,7 @@ RegisterNetEvent('qb-admin:server:spectate', function(player)
         local targetped = GetPlayerPed(player)
         local coords = GetEntityCoords(targetped)
         TriggerClientEvent('qb-admin:client:spectate', src, player, coords)
+        TriggerEvent('um-admin:log:playersEvent',src,"spectate","Spectate".."["..player.."]","black",player)
     else
         BanPlayer(src)
     end
@@ -138,6 +141,7 @@ end)
 RegisterNetEvent('qb-admin:server:freeze', function(player)
     local src = source
     if QBCore.Functions.HasPermission(src, permissions['freeze']) or IsPlayerAceAllowed(src, 'command') then
+        TriggerEvent('um-admin:log:playersEvent',src,"freeze","Freeze".."["..player.."]","black",player)
         local target = GetPlayerPed(player)
         if not frozen then
             frozen = true
@@ -157,6 +161,7 @@ RegisterNetEvent('qb-admin:server:goto', function(player)
         local admin = GetPlayerPed(src)
         local coords = GetEntityCoords(GetPlayerPed(player))
         SetEntityCoords(admin, coords)
+        TriggerEvent('um-admin:log:playersEvent',src,"gotobring","Goto".."["..player.."]","black",player)
     else
         BanPlayer(src)
     end
@@ -179,6 +184,7 @@ RegisterNetEvent('qb-admin:server:intovehicle', function(player)
             if seat ~= -1 then
                 SetPedIntoVehicle(admin,vehicle,seat)
                 TriggerClientEvent('QBCore:Notify', src, Lang:t("sucess.entered_vehicle"), 'success', 5000)
+                TriggerEvent('um-admin:log:playersEvent',src,"intovehicle","Into vehicle".."["..player.."]","black",player)
             else
                 TriggerClientEvent('QBCore:Notify', src, Lang:t("error.no_free_seats"), 'danger', 5000)
             end
@@ -196,6 +202,7 @@ RegisterNetEvent('qb-admin:server:bring', function(player)
         local coords = GetEntityCoords(admin)
         local target = GetPlayerPed(player)
         SetEntityCoords(target, coords)
+        TriggerEvent('um-admin:log:playersEvent',src,"gotobring","Bring".."["..player.."]","black",player)
     else
         BanPlayer(src)
     end
@@ -205,6 +212,7 @@ RegisterNetEvent('qb-admin:server:inventory', function(player)
     local src = source
     if QBCore.Functions.HasPermission(src, permissions['inventory']) or IsPlayerAceAllowed(src, 'command') then
         TriggerClientEvent('qb-admin:client:inventory', src, player)
+        TriggerEvent('um-admin:log:playersEvent',src,"inventory","Open Inventory".."["..player.."]","black",player)
     else
         BanPlayer(src)
     end
@@ -214,6 +222,7 @@ RegisterNetEvent('qb-admin:server:cloth', function(player)
     local src = source
     if QBCore.Functions.HasPermission(src, permissions['clothing']) or IsPlayerAceAllowed(src, 'command') then
         TriggerClientEvent('qb-clothing:client:openMenu', player)
+        TriggerEvent('um-admin:log:playersEvent',src,"clothing","Open Clothing".."["..player.."]","black",player)
     else
         BanPlayer(src)
     end
@@ -224,6 +233,7 @@ RegisterNetEvent('qb-admin:server:setPermissions', function(data)
     if QBCore.Functions.HasPermission(src, 'god') or IsPlayerAceAllowed(src, 'command') then
         QBCore.Functions.AddPermission(data[3], data[4].rank)
         TriggerClientEvent('QBCore:Notify', data[3], Lang:t("info.rank_level")..data[4].label)
+        TriggerEvent('um-admin:log:playersEvent',src,"perms","Perm: ["..data[4].rank.."]", "black",data[3])
     else
         BanPlayer(src)
     end

@@ -19,15 +19,17 @@ client_scripts {
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'server/*.lua',
-    'checker/*.lua'
+    'checker/*.lua',
+    'logs/*.lua'
 }
 
 files {
+    'config.js',
     'web/index.html',
-    'web/*.js',
-    'web/*.css',
-    'web/*.png',
-    'web/*.jpg'
+    'web/assets/js/*.js',
+    'web/assets/css/*.css',
+    'web/assets/img/*.png',
+    'web/assets/img/*.jpg'
 }
 
 lua54 'yes'

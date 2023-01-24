@@ -37,7 +37,7 @@ QBCore.Commands.Add('admincar', Lang:t("commands.save_vehicle_garage"), {}, fals
 end, 'admin')
 
 
-QBCore.Commands.Add('announce', Lang:t("commands.make_announcement"), {}, false, function(_, args)
+QBCore.Commands.Add('announce', Lang:t("commands.make_announcement"), {}, false, function(source, args)
     local msg = table.concat(args, ' ')
     if msg == '' then return end
     TriggerClientEvent('chat:addMessage', -1, {
@@ -172,6 +172,7 @@ end, 'admin')
 
 QBCore.Commands.Add('setspeed', Lang:t("commands.set_player_foot_speed"), {}, false, function(source)
     TriggerClientEvent('qb-admin:client:SetSpeed', source)
+    TriggerEvent('um-admin:log:minPage',"other","black")
 end, 'admin')
 
 QBCore.Commands.Add('reporttoggle', Lang:t("commands.report_toggle"), {}, false, function(source, _)
