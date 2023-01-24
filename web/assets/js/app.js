@@ -64,9 +64,9 @@ const adminPanel = Vue.createApp({
             document.body.removeChild(el);
         },
         minPage(panel,minPage,callBack) {
-			this.panel = panel
-			this.minpage = minPage
-			this.fetchNui(`um-admin:nuicallback:${callBack}`, '')
+	    this.panel = panel
+	    this.minpage = minPage
+	    this.fetchNui(`um-admin:nuicallback:${callBack}`, '')
         },
         pageResetEvent(url, pageReset, data) {
             this.fetchNui(url, data)
