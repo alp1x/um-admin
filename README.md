@@ -17,9 +17,10 @@ um-admin is a FiveM admin menu that is developed using Vue.js (CDN). Its purpose
 
 
 ## Tested version
-* qb-core 1.2.1
-* artifacts 5848
-* sv_enforceGameBuild 2699
+* [qb-core](https://github.com/qbcore-framework/qb-core) `1.2.1`
+* [oxmysql](https://github.com/overextended/oxmysql) `v2.5.4`
+* artifacts `5848`
+* sv_enforceGameBuild `2699`
 
 ## @
 * https://github.com/qbcore-framework/qb-adminmenu
