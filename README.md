@@ -7,11 +7,16 @@
 
 <img src="https://cdn.discordapp.com/attachments/627254815252152331/1066751247283130469/209208440-0d2eddef-dec1-41f6-a79a-09ae9edbbb7b_kopya.png">
 
-#### ⚠️ [um-admin wiki](https://github.com/alp1x/um-admin/wiki )
+## Information
+um-admin is a FiveM admin menu that is developed using Vue.js (CDN). Its purpose is to make administration tasks easier. It mainly utilizes [qb-adminmenu](https://github.com/qbcore-framework/qb-adminmenu) events and incorporates ideas from [txAdmin](https://github.com/tabarra/txAdmin). Additionally, it uses the color palette from [Project Sloth](https://github.com/Project-Sloth).
+##### ⚠️ for more information and details: [um-admin wiki](https://github.com/alp1x/um-admin/wiki )
+##### ⚠️ It is still in beta and is continuously being developed.
 
 
 
-### Tested version
+
+
+## Tested version
 * qb-core 1.2.1
 * artifacts 5848
 * sv_enforceGameBuild 2699
