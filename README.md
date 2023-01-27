@@ -7,7 +7,7 @@
 
 <img src="https://cdn.discordapp.com/attachments/627254815252152331/1066751247283130469/209208440-0d2eddef-dec1-41f6-a79a-09ae9edbbb7b_kopya.png">
 
-## Information
+## 🥝 Information
 um-admin is a FiveM admin menu that is developed using Vue.js (CDN). Its purpose is to make administration tasks easier. It mainly utilizes [qb-adminmenu](https://github.com/qbcore-framework/qb-adminmenu) events and incorporates ideas from [txAdmin](https://github.com/tabarra/txAdmin). Additionally, it uses the color palette from [Project Sloth](https://github.com/Project-Sloth).
 ##### ⚠️ for more information and details: [um-admin wiki](https://github.com/alp1x/um-admin/wiki/um-admin-wiki)
 ##### ⚠️ It is still in beta and is continuously being developed.
@@ -21,6 +21,12 @@ um-admin is a FiveM admin menu that is developed using Vue.js (CDN). Its purpose
 * [oxmysql](https://github.com/overextended/oxmysql) `v2.5.4`
 * [artifacts](https://runtime.fivem.net/artifacts/fivem/build_server_windows/master/) `5848`
 * sv_enforceGameBuild `2699`
+
+## URL
+* ##### Peds: https://docs.fivem.net/ 
+* ##### Vehicle: https://gtahash.ru/
+* ##### Weapons: https://vespura.com/ | <img src="https://avatars.githubusercontent.com/u/31419184?v=4" width="1%"> [TomGrobbe](https://github.com/TomGrobbe)
+* ##### Discord Lookup: https://mesavirep.xyz/ | <img src="https://avatars.githubusercontent.com/u/43297230?v=4" width="1%"> [chocololat](https://github.com/chocololat)
 
 ## @
 * https://github.com/qbcore-framework/qb-adminmenu
