@@ -262,6 +262,21 @@ RegisterServerEvent('qb-admin:giveWeapon', function(weapon)
     end
 end)
 
+RegisterServerEvent('qb-admin:server:givemoneyadmin', function(data)
+    local src = source
+    if QBCore.Functions.HasPermission(src, 'admin') or IsPlayerAceAllowed(src, 'command') then
+        local Player = QBCore.Functions.GetPlayer(tonumber(data[3]))
+        if Player then
+            Player.Functions.AddMoney(tostring(data[4].money), tonumber(data[5]))
+            TriggerEvent('um-admin:log:playersEvent',src,"givemoney","Give Money".."[Type:"..tostring(data[4].money).."] Total:"..tonumber(data[5]),"black",tonumber(data[3]))
+        else
+            TriggerClientEvent('QBCore:Notify', source, Lang:t('error.not_online'), 'error')
+        end
+    else
+        BanPlayer(src)
+    end
+end)
+
 RegisterNetEvent('qb-admin:server:SaveCar', function(mods, vehicle, _, plate)
     local src = source
     if QBCore.Functions.HasPermission(src, 'admin') or IsPlayerAceAllowed(src, 'command') then

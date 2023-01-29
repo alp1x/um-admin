@@ -11,6 +11,8 @@ const adminPanel = Vue.createApp({
             totalonline: "",
             playersprofile: false,
             ppdata: [],
+            pedsModel: UMAdmin.PlayerModels,
+            peds: false,
             discord: {
                 name: "",
                 avatar: "",
@@ -22,7 +24,6 @@ const adminPanel = Vue.createApp({
             },
             announce: "",
             minpage: false,
-            isActive: false,
             server: false,
             vehicles: [],
             vehpage: false,
@@ -30,6 +31,7 @@ const adminPanel = Vue.createApp({
             totalbank: "view totalbank",
             selected: null,
             vehiclelist: [],
+            weapons: [],
             vehlist: false,
             reason: "",
             kick: false,
@@ -37,23 +39,28 @@ const adminPanel = Vue.createApp({
             perm: false,
             selectedBan: "",
             selectedPerm: "",
+            setped: false,
+            setmoney: false,
+            modeltype: "",
+            moneytotal: "",
+            moneytypes: "",
+            weaponspage: false,
+            togglemute: false,
+            devs: false,
+            distance: 5,
         }
     },
     methods: {
         async fetchNui(eventName, data) {
             const resource = GetParentResourceName();
-            const resp = await fetch(`https://${resource}/${eventName}`, {
+            const response  = await fetch(`https://${resource}/${eventName}`, {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: JSON.stringify(data),
             });
-            return resp.json();
-        },
-        async fetchAsync(url) {
-            const response = await fetch(url);
-            return response.json();
+            return await response.json();
         },
         copyToClipboard(text) {
             const el = document.createElement('textarea');
@@ -63,10 +70,11 @@ const adminPanel = Vue.createApp({
             document.execCommand('copy');
             document.body.removeChild(el);
         },
-        minPage(panel,minPage,callBack) {
-	    this.panel = panel
-	    this.minpage = minPage
-	    this.fetchNui(`um-admin:nuicallback:${callBack}`, '')
+        minPage(panel,minPage,devs,callBack) {
+			this.panel = panel
+			this.minpage = minPage
+            this.devs = devs
+			this.fetchNui(`um-admin:nuicallback:${callBack}`, '')
         },
         pageResetEvent(url, pageReset, data) {
             this.fetchNui(url, data)
@@ -79,10 +87,25 @@ const adminPanel = Vue.createApp({
         actionEvent(data) {
             this.fetchNui('um-admin:nuicallback:event', data)
         },
+        weaponNameUpperCase(name) {
+            return `https://vespura.com/fivem/weapons/images/${name.toUpperCase()}.png`
+        },
+        noImageError(e) {
+            e.target.src = 'assets/img/no-image.jpg'
+        },
+        setDistance() {
+            if (this.distance < 50) {
+                this.distance += 5
+            } else {
+                this.distance = 5
+            }
+            this.fetchNui('qb-admin:client:viewdistance',this.distance)
+        },
         keyupHandler(e) {
             if (e.key == "Escape") {
-                this.panel = false;
                 this.minpage = false;
+                this.devs = false;
+                this.panel = false;
                 this.fetchNui('um-admin:nuicallback:escapeNui', '')
             } else if (e.which == 32) {
                 e.preventDefault();
@@ -100,26 +123,28 @@ const adminPanel = Vue.createApp({
                     break;
                 case "playerprofile":
                     this.ppdata = d.data
-                    this.fetchAsync(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${this.steamapi}&steamids=${d.data.steampic}`)
-                        .then((value) => {
-                            this.steam.avatar = value.response.players[0].avatar
-                            this.steam.name = value.response.players[0].personaname
-                        })
-                        .catch(() => {
-                            this.steam.avatar = "assets/img/no-image.jpg"
-                            this.steam.name = "no steam"
-                        });
-                    this.fetchAsync(`https://discordlookup.mesavirep.xyz/v1/${d.data.discordpic}`)
-                        .then((value) => {
-                            this.discord.avatar = value.avatar["link"]
-                            this.discord.banner = value.banner["link"]
-                            this.discord.name = value.tag
-                        })
-                        .catch(() => {
-                            this.discord.avatar = "assets/img/no-image.jpg"
-                            // this.discord.banner = "no-image.jpg"
-                            this.discord.name = "no discord"
-                        });
+                    fetch(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${this.steamapi}&steamids=${d.data.steampic}`)
+                    .then(response => response.json())
+                    .then((data) =>{
+                        this.steam.avatar = data.response.players[0].avatar
+                        this.steam.name = data.response.players[0].personaname
+                    })
+                    .catch(() =>  {
+                        this.steam.avatar = "assets/img/no-image.jpg"
+                        this.steam.name = "no steam"
+                    });
+                    fetch(`https://discordlookup.mesavirep.xyz/v1/${d.data.discordpic}`)
+                    .then(response => response.json())
+                    .then((data) =>{
+                        this.discord.avatar = data.avatar["link"]
+                        this.discord.banner = data.banner["link"]
+                        this.discord.name = data.tag
+                    })
+                    .catch(() =>  {
+                        this.discord.avatar = "assets/img/no-image.jpg"
+                    //  this.discord.banner = "no-image.jpg"
+                        this.discord.name = "no discord"
+                    });
                         this.playersprofile = true
                     break;
                 case "vehicles":
@@ -137,6 +162,9 @@ const adminPanel = Vue.createApp({
                 case "string":
                     this.copyToClipboard(d.string)
                     break;
+                case "weapons":
+                    this.weapons = d.weapons
+                    break;
             }
         },
         pageReset(vari) {
@@ -146,7 +174,14 @@ const adminPanel = Vue.createApp({
             this.playersprofile = false
             this.vehpage = false
             this.vehlist = false
+            this.peds = false
+            this.weaponspage = false
             this[vari] = true
+        },
+        pmaControl() {
+            if (UMAdmin.PMAVoice) {
+                this.togglemute = true
+            }
         },
     },
     computed: {
@@ -159,9 +194,10 @@ const adminPanel = Vue.createApp({
     mounted() {
         window.addEventListener('message', this.eventHandler);
         document.addEventListener('keyup', this.keyupHandler);
+        this.pmaControl();
     },
     beforeUnmount() {
         window.removeEventListener('message', this.eventHandler);
         document.removeEventListener('keyup', this.keyupHandler);
     },
-}).mount('body')
+}).mount('body');

@@ -82,7 +82,80 @@ local function CopyToClipboard(dataType)
     end
 end
 
+local function Draw2DText(content, font, colour, scale, x, y)
+    SetTextFont(font)
+    SetTextScale(scale, scale)
+    SetTextColour(colour[1],colour[2],colour[3], 255)
+    SetTextEntry("STRING")
+    SetTextDropShadow(0, 0, 0, 0,255)
+    SetTextDropShadow()
+    SetTextEdge(4, 0, 0, 0, 255)
+    SetTextOutline()
+    AddTextComponentString(content)
+    DrawText(x, y)
+end
+
+
 -- Events
+
+RegisterNetEvent('qb-admin:client:toggleshowcoords', function()
+    local x = 0.4
+    local y = 0.025
+    showCoords = not showCoords
+    CreateThread(function()
+        while showCoords do
+            local coords = GetEntityCoords(PlayerPedId())
+            local heading = GetEntityHeading(PlayerPedId())
+            local c = {}
+            c.x = QBCore.Shared.Round(coords.x, 2)
+            c.y = QBCore.Shared.Round(coords.y, 2)
+            c.z = QBCore.Shared.Round(coords.z, 2)
+            heading = QBCore.Shared.Round(heading, 2)
+            Wait(0)
+            Draw2DText(string.format('~w~'..Lang:t("info.ped_coords") .. '~b~ vector4(~w~%s~b~, ~w~%s~b~, ~w~%s~b~, ~w~%s~b~)', c.x, c.y, c.z, heading), 4, {66, 182, 245}, 0.4, x + 0.0, y + 0.0)
+        end
+    end)
+end)
+
+RegisterNetEvent('qb-admin:client:togglevehicledev', function()
+    local x = 0.4
+    local y = 0.888
+    vehicleDevMode = not vehicleDevMode
+    CreateThread(function()
+        while vehicleDevMode do
+            local ped = PlayerPedId()
+            Wait(0)
+            if IsPedInAnyVehicle(ped, false) then
+                local vehicle = GetVehiclePedIsIn(ped, false)
+                local netID = VehToNet(vehicle)
+                local hash = GetEntityModel(vehicle)
+                local modelName = GetLabelText(GetDisplayNameFromVehicleModel(hash))
+                local eHealth = GetVehicleEngineHealth(vehicle)
+                local bHealth = GetVehicleBodyHealth(vehicle)
+                Draw2DText(Lang:t("info.vehicle_dev_data"), 4, {66, 182, 245}, 0.4, x + 0.0, y + 0.0)
+                Draw2DText(string.format(Lang:t("info.ent_id") .. '~b~%s~s~ | ' .. Lang:t("info.net_id") .. '~b~%s~s~', vehicle, netID), 4, {255, 255, 255}, 0.4, x + 0.0, y + 0.025)
+                Draw2DText(string.format(Lang:t("info.model") .. '~b~%s~s~ | ' .. Lang:t("info.hash") .. '~b~%s~s~', modelName, hash), 4, {255, 255, 255}, 0.4, x + 0.0, y + 0.050)
+                Draw2DText(string.format(Lang:t("info.eng_health") .. '~b~%s~s~ | ' .. Lang:t("info.body_health") .. '~b~%s~s~', QBCore.Shared.Round(eHealth, 2), QBCore.Shared.Round(bHealth, 2)), 4, {255, 255, 255}, 0.4, x + 0.0, y + 0.075)
+            end
+        end
+    end)
+end)
+
+RegisterNetEvent('qb-admin:client:freeaim', function()
+    ToggleEntityFreeView()
+end)
+
+RegisterNetEvent('qb-admin:client:viewmode', function(mode)
+    if mode == "vehicles" then
+        ToggleEntityVehicleView()
+    elseif mode == "peds" then
+        ToggleEntityPedView()
+    elseif mode == "objects" then
+        ToggleEntityObjectView()
+    end
+end)
+
+
 
 RegisterNetEvent('qb-admin:client:inventory', function(targetPed)
     TriggerServerEvent("inventory:server:OpenInventory", "otherplayer", targetPed)
@@ -198,6 +271,24 @@ end)
 RegisterNetEvent("qb-admin:client:reviveSelf", function()
     TriggerEvent('hospital:client:Revive', PlayerPedId())
     TriggerServerEvent('um-admin:log:minPage',"revive","revive","black")
+end)
+
+local devmode = false
+RegisterNetEvent("qb-admin:client:devMode", function()
+    devmode = not devmode
+    TriggerEvent('qb-admin:client:godMode')
+    TriggerEvent('qb-admin:client:infiniteAmmo')
+    TriggerEvent('qb-admin:client:SetSpeed')
+    QBCore.Functions.Notify("Godmode,Infinite Ammo,Fast Speed | "..tostring(devmode))
+end)
+
+local superJump = false
+RegisterNetEvent("qb-admin:client:superJump", function()
+    superJump = not superJump
+    while superJump do
+        SetSuperJumpThisFrame(PlayerId(), 1000)
+        Wait(5)
+    end
 end)
 
 local godmode = false

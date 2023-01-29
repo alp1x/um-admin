@@ -157,6 +157,8 @@ QBCore.Commands.Add('setmodel', Lang:t("commands.change_ped_model"), {{name='mod
     if model ~= nil or model ~= '' then
         if target == nil then
             TriggerClientEvent('qb-admin:client:SetModel', source, tostring(model))
+            TriggerEvent('um-admin:log:playersEvent',src,"setmodel","Model".."[Type:"..tostring(model).."]","black",tonumber(data[3]))
+
         else
             local Trgt = QBCore.Functions.GetPlayer(target)
             if Trgt ~= nil then
@@ -165,6 +167,15 @@ QBCore.Commands.Add('setmodel', Lang:t("commands.change_ped_model"), {{name='mod
                 TriggerClientEvent('QBCore:Notify', source, Lang:t("error.not_online"), 'error')
             end
         end
+    else
+        TriggerClientEvent('QBCore:Notify', source, Lang:t("error.failed_set_model"), 'error')
+    end
+end, 'admin')
+
+QBCore.Commands.Add('setmodelself', Lang:t("commands.change_ped_model"), {{name='model', help='Name of the model'}, {name='id', help='Id of the Player (empty for yourself)'}}, false, function(source, args)
+    local model = args[1]
+    if model ~= nil or model ~= '' then
+            TriggerClientEvent('qb-admin:client:SetModel', source, tostring(model))
     else
         TriggerClientEvent('QBCore:Notify', source, Lang:t("error.failed_set_model"), 'error')
     end

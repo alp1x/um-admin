@@ -1,6 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local umadmin,minpage,disablecontrol = false,false,false
-local vehicles = {}
+local vehicles,weapons = {},{}
 
 
 local function nuiWalks(bool)
@@ -33,7 +33,6 @@ end
 RegisterNetEvent('um-admin:client:openMenu', function()
     if not umadmin then
         QBCore.Functions.TriggerCallback('smallresources:server:GetCurrentPlayers', function(result)
-            --SetNuiFocusKeepInput(true)
             SetNuiFocus(true,true)
             SendNUIMessage({type = "panel", result = result})
         end)
@@ -70,6 +69,10 @@ RegisterNUICallback('um-admin:nuicallback:getVehicles', function()
     SendNUIMessage({type="vehicles",vehicles=vehicles})
 end)
 
+RegisterNUICallback('um-admin:nuicallback:getWeapons', function()
+    SendNUIMessage({type="weapons",weapons=weapons})
+end)
+
 RegisterNUICallback('um-admin:nuicallback:weather', function(weather)
     TriggerServerEvent('qb-weathersync:server:setWeather',weather)
     QBCore.Functions.Notify(Lang:t("weather.weather_changed", weather))
@@ -80,9 +83,18 @@ RegisterNUICallback('um-admin:nuicallback:time', function(time)
     QBCore.Functions.Notify(Lang:t("time.changed", {time = time}))
 end)
 
+RegisterNUICallback("um-admin:nuicallback:toggleMutePlayer", function(player)
+    exports['pma-voice']:toggleMutePlayer(player)
+end)
+
+RegisterNUICallback('qb-admin:client:viewdistance', function(value)
+    SetEntityViewDistance(value)
+    QBCore.Functions.Notify(Lang:t("info.entity_view_distance", {distance = value}))
+end)
+
 RegisterNUICallback("um-admin:nuicallback:event", function(data)
     if data[1] == 'client' then
-        TriggerEvent(data[2])
+        TriggerEvent(data[2],data[3])
     elseif data[1] == 'server' then
         TriggerServerEvent(data[2],data[3])
     elseif data[1] == 'command' then
@@ -106,12 +118,17 @@ RegisterNUICallback("um-admin:nuicallback:escapeNui", function()
 	umadmin = false
 end)
 
--- Set vehicle Categories
-for k, v in pairs(QBCore.Shared.Vehicles) do
-    local category = v["category"]
-    if vehicles[category] == nil then
-        vehicles[category] = { }
+
+CreateThread(function()
+    for k, v in pairs(QBCore.Shared.Vehicles) do
+        local category = v["category"]
+        if vehicles[category] == nil then
+            vehicles[category] = { }
+        end
+        vehicles[category][k] = v
     end
-    vehicles[category][k] = v
-end
+    for _,v in pairs(QBCore.Shared.Weapons) do
+        weapons[v.label] = v
+    end
+end)
 

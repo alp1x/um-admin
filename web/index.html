@@ -15,10 +15,10 @@
             <li @click="pageResetEvent('um-admin:nuicallback:getPlayers', 'players', '')"><i class="fa-solid fa-user-group"></i> {{lang.general.players}}</li>
             <li @click="pageReset('server')"><i class="fa-solid fa-server"></i> {{lang.general.server}}</li>
             <li @click="pageResetEvent('um-admin:nuicallback:getVehicles', 'vehpage', '')"><i class="fa-solid fa-car"></i> {{lang.general.vehicles}}</li>
-            <li><i style="background: #ffbc00;" class="fa-solid fa-code"></i> {{lang.general.devs}}</li>
-            <li><i style="background: #ffbc00;" class="fa-solid fa-ban"></i> {{lang.general.bans}}</li>
-            <li><i style="background: #ffbc00;" class="fa-solid fa-person"></i> {{lang.general.peds}}</li>
-            <li @click="minPage(false,true,'setMinPage')"><i class="fa-solid fa-minimize"></i> {{lang.general.minpage}}</li>
+            <li @click="pageReset('peds')"><i class="fa-solid fa-person"></i> {{lang.general.peds}}</li>
+            <li @click="pageResetEvent('um-admin:nuicallback:getWeapons', 'weaponspage', '')"><i class="fa-solid fa-gun"></i> {{lang.general.weapons}}</li>
+            <li @click="minPage(false,false,true,'setMinPage')"><i class="fa-solid fa-code"></i> {{lang.general.devs}}</li>
+            <li @click="minPage(false,true,false,'setMinPage')"><i class="fa-solid fa-minimize"></i> {{lang.general.minpage}}</li>
          </div>
          <div class="page">
             <div id="dashboard" v-if="dashboard">
@@ -105,9 +105,12 @@
                   <div class="profile-card w-2" aria-label="intovehicle" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','intovehicle',ppdata.player])"><i class="fa-solid fa-car"></i> </div>
                   <div class="profile-card w-2" aria-label="inventory" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','inventory',ppdata.player])"><i class="fa-solid fa-toolbox"></i> </div>
                   <div class="profile-card w-2" aria-label="cloth" data-cooltipz-dir="bottom" @click="actionEvent(['adminserver','cloth',ppdata.player])"><i class="fa-solid fa-shirt"></i></div>
-                  <div class="profile-card w-2" aria-label="kick" data-cooltipz-dir="bottom" @click="kick = !kick"><i class="fa-solid fa-triangle-exclamation"></i> </div>
-                  <div class="profile-card w-2" aria-label="ban" data-cooltipz-dir="bottom" @click="ban = !ban"><i class="fa-solid fa-ban"></i> </div>
-                  <div class="profile-card w-2" aria-label="perm" data-cooltipz-dir="bottom" @click="perm = !perm"><i class="fa-solid fa-barcode"></i> </div>
+                  <div class="profile-card w-2" aria-label="setmodel" data-cooltipz-dir="bottom" @click="setped = !setped"><i class="fa-solid fa-person"></i> </div>
+                  <div class="profile-card w-2" aria-label="givemoney" data-cooltipz-dir="bottom" @click="setmoney = !setmoney"><i class="fa-solid fa-wallet"></i> </div>
+                  <div class="profile-card w-2" aria-label="muteplayer" data-cooltipz-dir="bottom" v-show="togglemute" @click="fetchNui('um-admin:nuicallback:toggleMutePlayer',ppdata.player)"><i class="fa-solid fa-volume-xmark"></i> </div>
+                  <div class="profile-card w-2 warning" aria-label="kick" data-cooltipz-dir="bottom" @click="kick = !kick"><i class="fa-solid fa-triangle-exclamation"></i> </div>
+                  <div class="profile-card w-2 ban" aria-label="ban" data-cooltipz-dir="bottom" @click="ban = !ban"><i class="fa-solid fa-ban"></i> </div>
+                  <div class="profile-card w-2 perm" aria-label="perm" data-cooltipz-dir="bottom" @click="perm = !perm"><i class="fa-solid fa-barcode"></i> </div>
                </div>
                <div v-if="kick" class="profile-card">
                   <div class="titlemodal">
@@ -120,7 +123,8 @@
                   <div class="titlemodal">
                      <h5><i class="fa-solid fa-ban"></i> Ban Reason</h5>
                   </div>
-                  <select v-model="selectedBan">
+                  <select v-model="selectedBan" :required>
+                     <option disabled value="">Please select one</option>
                      <option :value="86400">1 Day</option>
                      <option :value="604800">1 Week</option>
                      <option :value="32140800">1 Year</option>
@@ -133,12 +137,34 @@
                   <div class="titlemodal">
                      <h5><i class="fa-solid fa-ban"></i> Permissions</h5>
                   </div>
-                  <select v-model="selectedPerm">
+                  <select v-model="selectedPerm" :required>
+                     <option disabled value="">Please select one</option>
                      <option :value="{rank: 'user', label: 'User'}">User</option>
                      <option :value="{rank: 'admin', label: 'Admin'}">Admin</option>
                      <option :value="{rank:'god', label: 'God'}">God</option>
                   </select>
                   <button @click="actionEvent(['kickorban','setPermissions',ppdata.player,selectedPerm])">Set Perm</button>
+               </div>
+               <div v-if="setped" class="profile-card">
+                  <div class="titlemodal">
+                     <h5><i class="fa-solid fa-person"></i> Set Model</h5>
+                  </div>
+                  <input type="text" v-model="modeltype" name="setmodel" class="modalinput" placeholder="Model Name..">
+                  <button @click="actionEvent(['command','setmodel',modeltype])">Submit</button>
+               </div>
+               <div v-if="setmoney" class="profile-card">
+                  <div class="titlemodal">
+                     <h5><i class="fa-solid fa-wallet"></i> Give Money</h5>
+                  </div>
+                  <div class="moneytype">
+                     <select v-model="moneytypes" :required>
+                        <option disabled value="">Please select one</option>
+                        <option selected :value="{money: 'cash'}">Cash</option>
+                        <option :value="{money: 'bank'}">Bank</option>
+                     </select>
+                  </div>
+                  <input type="number" v-model.number="moneytotal" name="moneytotal" class="modalinput" placeholder="Money">
+                  <button @click="actionEvent(['kickorban','givemoneyadmin',ppdata.player,moneytypes,moneytotal])">Give Money</button>
                </div>
             </div>
             <div id="server" v-if="server">
@@ -162,9 +188,9 @@
                <div class="title">
                   <h1>{{lang.general.vehicles}}</h1>
                </div>
-               <div class="profile-card" v-for="(k,v) in vehicles" @click="getVehicleList(k)">
+               <div class="profile-card" v-for="(item,index) in vehicles" @click="getVehicleList(item)">
                   <i class="fa-solid fa-tags"></i>
-                  <h5>{{ v }}</h5>
+                  <h5>{{ index }}</h5>
                   <small></small>
                </div>
             </div>
@@ -172,11 +198,29 @@
                <div class="title">
                   <h1>Vehicle Category</h1>
                </div>
-               <div class="profile-card" v-for="(k,v) in vehiclelist" @click="actionEvent(['command','car',v])">
-                  <h5> <i class="fa-solid fa-tags"></i> {{k.category}}</h5>
-                  <img id="car" :src="'https://gtahash.ru/cars/' + k.category + '/' + v + '.jpg'" @error="(e)=>{e.target.src = 'assets/img/no-image.jpg'}">
-                  <h5><i class="fa-solid fa-car-side"></i> Model: {{ v }}</h5>
-                  <small>@spawn {{v}}</small>
+               <div class="profile-card" v-for="(item,index) in vehiclelist" @click="actionEvent(['command','car',index])">
+                  <h5> <i class="fa-solid fa-tags"></i> {{item.category}}</h5>
+                  <img id="car" :src="'https://gtahash.ru/cars/' + item.category + '/' + index + '.jpg'" @error="noImageError">
+                  <h5><i class="fa-solid fa-car-side"></i> Model: {{ index }}</h5>
+                  <small>@spawn {{index}}</small>
+               </div>
+            </div>
+            <div id="peds" v-if="peds">
+               <div class="title">
+                  <h1>Peds</h1>
+               </div>
+               <div class="profile-card" v-for="item in pedsModel" @click="actionEvent(['command','setmodelself', item])">
+                     <img id="ped" :src="'https://docs.fivem.net/peds/' + item + '.webp'" @error="noImageError">
+                     <h5>{{ item }}</h5>
+               </div>
+            </div>
+            <div id="weaponspage" v-if="weaponspage">
+               <div class="title">
+                  <h1>Weapons</h1>
+               </div>
+               <div class="profile-card" v-for="item in weapons" @click="actionEvent(['server','qb-admin:giveWeapon', item.name])">
+                  <img id="weapon" :src="weaponNameUpperCase(item.name)" @error="noImageError">
+                     <h5><i class="fa-solid fa-gun"></i> {{ item.label }}</h5>
                </div>
             </div>
          </div>
@@ -195,6 +239,8 @@
                   <button @click="actionEvent(['command','names', ''])">{{lang.minpage.names}}</button>
                   <button @click="actionEvent(['command','setspeed', ''])">{{lang.minpage.fastspeed}}</button>
                   <button @click="actionEvent(['client','qb-admin:client:infiniteAmmo'])">{{lang.minpage.infiniteammo}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:superJump'])">{{lang.minpage.superjump}}</button>
+                  <button @click="actionEvent(['client','qb-clothing:client:openMenu'])">{{lang.minpage.clothing}}</button>
                   <hr>
                   <button @click="actionEvent(['command','fix', ''])">{{lang.minpage.fixvehicle}}</button>
                   <button @click="actionEvent(['client','qb-admin:client:maxmodVehicle', ''])">{{lang.minpage.maxmodvehicle}}</button>
@@ -204,12 +250,47 @@
                   <button @click="actionEvent(['command','vector2', ''])">{{lang.minpage.copyvector2}}</button>
                   <button @click="actionEvent(['command','vector3', ''])">{{lang.minpage.copyvector3}}</button>
                   <button @click="actionEvent(['command','vector4', ''])">{{lang.minpage.copyvector4}}</button>
-                  <button @click="actionEvent(['command','heading'])">{{lang.minpage.heading}}</button>
+                  <button @click="actionEvent(['command','heading', ''])">{{lang.minpage.heading}}</button>
                </div>
             </div>
             <hr>
             <div class="footer">
-               <small @click="minPage(true,false,'toFullPage')"><i class="fa-solid fa-expand" style="color: var(--green);"></i>  FULL PAGE</small>
+               <small @click="minPage(true,false,false,'toFullPage')"><i class="fa-solid fa-expand" style="color: var(--green);"></i>  FULL PAGE</small>
+            </div>
+         </div>
+      </div>
+      <div class="panel-min animate__animated animate__faster " v-if="devs" :class="{animate__fadeIn: devs}">
+         <div class="minpage">
+            <img src="assets/img/logo.png">
+            <h5>um-admin | devs tools</h5>
+            <div class="action-minpage-list">
+               <div class="action-minpage-list">
+                  <button @click="actionEvent(['command','noclip', ''])">{{lang.minpage.noclip}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:togglevehicledev', ''])">{{lang.minpage.vehicledev}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:toggleshowcoords', ''])">{{lang.minpage.showcoords}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:devMode', ''])"><i class="fa-solid fa-code" style="color: var(--green);"></i> {{lang.minpage.devmode}}</button>
+                  <hr>
+                  <button @click="actionEvent(['command','fix', ''])">{{lang.minpage.fixvehicle}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:maxmodVehicle', ''])">{{lang.minpage.maxmodvehicle}}</button>
+                  <button @click="actionEvent(['command','admincar', ''])">{{lang.minpage.buyvehicle}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:vehicleGodMode', ''])">{{lang.minpage.godmodeveh}}</button>
+                  <hr>
+                  <button @click="setDistance">{{lang.minpage.setdistance}} <small style="color: var(--green);"> < {{distance}} > </small></button>
+                  <button @click="actionEvent(['client','qb-admin:client:freeaim', ''])">{{lang.minpage.freeaim}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:viewmode', 'vehicles'])">{{lang.minpage.displayvehicle}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:viewmode','peds'])">{{lang.minpage.displaypeds}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:viewmode','objects'])">{{lang.minpage.displayobjects}}</button>
+                  <button @click="actionEvent(['client','qb-admin:client:copyToClipboard','freeaimEntity'])">{{lang.minpage.copyfreeaim}}</button>
+                  <hr>
+                  <button @click="actionEvent(['command','vector2', ''])">{{lang.minpage.copyvector2}}</button>
+                  <button @click="actionEvent(['command','vector3', ''])">{{lang.minpage.copyvector3}}</button>
+                  <button @click="actionEvent(['command','vector4', ''])">{{lang.minpage.copyvector4}}</button>
+                  <button @click="actionEvent(['command','heading'], '')">{{lang.minpage.heading}}</button>
+               </div>
+            </div>
+            <hr>
+            <div class="footer">
+               <small @click="minPage(true,false,false,'toFullPage')"><i class="fa-solid fa-expand" style="color: var(--green);"></i>  FULL PAGE</small>
             </div>
          </div>
       </div>

@@ -407,7 +407,7 @@ RunEntityViewThread = function()
             end
 
             if EntityFreeAim then
-                DrawTitle("~y~"..Lang:t("info.entity_view_title").."~w~\n\n[~y~E~w~] - "..Lang:t("info.entity_freeaim_delete").."~w~\n[~y~G~w~] - "..Lang:t("info.entity_freeaim_freeze"), 0.15, 0.14)
+                DrawTitle("~y~"..Lang:t("info.entity_view_title").."~w~\n\n[~r~E~w~] - "..Lang:t("info.entity_freeaim_delete").."~w~\n[~b~G~w~] - "..Lang:t("info.entity_freeaim_freeze").."~w~\n[~g~H~w~]Copy", 0.15, 0.17)
                 local color = {r = 255, g = 255, b = 255, a = 200}
                 local position = GetEntityCoords(playerPed)
                 local hit, coords, entity = RayCastGamePlayCamera(1000.0)
@@ -439,6 +439,9 @@ RunEntityViewThread = function()
                         else
                             QBCore.Functions.Notify(Lang:t("info.entity_del_error"), 'error')
                         end
+                    end
+                    if IsControlJustReleased(0, 101) then -- Copy entity
+                        TriggerEvent('qb-admin:client:copyToClipboard', 'freeaimEntity')
                     end
                 else
                     FreeAimEntity = nil
