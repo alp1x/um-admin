@@ -5,7 +5,7 @@
 [![License MIT](https://cdn.discordapp.com/attachments/715130970294059088/1044845854508449822/license.png)](https://choosealicense.com/licenses/gpl-3.0)
 [![Discord](https://cdn.discordapp.com/attachments/715130970294059088/1044855172494532628/discord.png)](https://discord.gg/cf6wkBFeYV)
 
-<img src="https://cdn.discordapp.com/attachments/627254815252152331/1066751247283130469/209208440-0d2eddef-dec1-41f6-a79a-09ae9edbbb7b_kopya.png">
+<img src="https://cdn.discordapp.com/attachments/1016069609897595011/1069064448117067906/umadmin.png">
 
 ## 🥝 Information
 um-admin is a FiveM admin menu that is developed using Vue.js (CDN). Its purpose is to make administration tasks easier. It mainly utilizes [qb-adminmenu](https://github.com/qbcore-framework/qb-adminmenu) events and incorporates ideas from [txAdmin](https://github.com/tabarra/txAdmin). Additionally, it uses the color palette from [Project Sloth](https://github.com/Project-Sloth).
