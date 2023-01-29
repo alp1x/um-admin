@@ -23,9 +23,9 @@ local Webhooks = {
     ["setmodel"] = '',
 
     --- Ban or Kick or Cheater
-    ['kick'] = 'https://discord.com/api/webhooks/1067514394591903824/Nei53Y7aAFFlehsHHVk2Ac1fxcOmm1wrwI_c48q1P1GX4zVErrW7iZibzkT0a0pGP7hb',
-    ['ban'] = 'https://discord.com/api/webhooks/1067522024194457611/ZU6QK5J7yzf-EMLxNihNaUia8VE_FWZLpKIo36JMNLQVb_jcgZI7nv3sofimSitpm3vR',
-    ['cheater'] = 'https://discord.com/api/webhooks/1067530002331078658/dyz8W8_CcFDWeD3awA4yIfBac9BnNodeu7Z-9DgyrttPGF6jfqItWT84pFHZr5TTFTaT',
+    ['kick'] = '',
+    ['ban'] = '',
+    ['cheater'] = '',
 
 }
 
