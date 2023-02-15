@@ -1,4 +1,4 @@
-local version = "1.1.0"
+local version = "1.2.0"
 local updateUrl = "https://raw.githubusercontent.com/alp1x/um-admin/main/checker/checkversion" -- URL to check for updates
 
 PerformHttpRequest(updateUrl, function(err, response, headers)

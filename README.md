@@ -20,8 +20,8 @@ um-admin is a FiveM admin menu that is developed using Vue.js (CDN). Its purpose
 * sv_enforceGameBuild `2699`
 
 ## URL
-* ##### Peds: https://docs.fivem.net/ 
-* ##### Vehicle: https://gtahash.ru/
+* ##### Peds: https://docs.fivem.net/docs/game-references/ped-models/
+* ##### Vehicle: https://docs.fivem.net/docs/game-references/vehicle-models/
 * ##### Weapons: https://vespura.com/ | <img src="https://avatars.githubusercontent.com/u/31419184?v=4" width="1%"> [TomGrobbe](https://github.com/TomGrobbe)
 * ##### Discord Lookup: https://mesavirep.xyz/ | <img src="https://avatars.githubusercontent.com/u/43297230?v=4" width="1%"> [chocololat](https://github.com/chocololat)
 

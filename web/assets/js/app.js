@@ -133,7 +133,7 @@ const adminPanel = Vue.createApp({
                         this.steam.avatar = "assets/img/no-image.jpg"
                         this.steam.name = "no steam"
                     });
-                    fetch(`https://discordlookup.mesavirep.xyz/v1/${d.data.discordpic}`)
+                    fetch(`https://discordlookup.mesavirep.xyz/v1/user/${d.data.discordpic}`)
                     .then(response => response.json())
                     .then((data) =>{
                         this.discord.avatar = data.avatar["link"]

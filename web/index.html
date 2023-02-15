@@ -200,7 +200,7 @@
                </div>
                <div class="profile-card" v-for="(item,index) in vehiclelist" @click="actionEvent(['command','car',index])">
                   <h5> <i class="fa-solid fa-tags"></i> {{item.category}}</h5>
-                  <img id="car" :src="'https://gtahash.ru/cars/' + item.category + '/' + index + '.jpg'" @error="noImageError">
+                  <img id="car" :src="'https://docs.fivem.net/vehicles/' + index + '.webp'" @error="noImageError">
                   <h5><i class="fa-solid fa-car-side"></i> Model: {{ index }}</h5>
                   <small>@spawn {{index}}</small>
                </div>
