@@ -2,7 +2,8 @@ const adminPanel = Vue.createApp({
     data() {
         return {
             lang: UMAdmin.Lang,
-            steamapi: UMAdmin.SteamWebAPI,
+            configsettings: UMAdmin.Settings,
+            steamapi: UMAdmin.Settings.steamWebAPI,
             dashboard: true,
             allplayers: [],
             search: "",
@@ -123,7 +124,7 @@ const adminPanel = Vue.createApp({
                     break;
                 case "playerprofile":
                     this.ppdata = d.data
-                    fetch(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${this.steamapi}&steamids=${d.data.steampic}`)
+                    fetch(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${this.configsettings.steamWebAPI}&steamids=${d.data.steampic}`)
                     .then(response => response.json())
                     .then((data) =>{
                         this.steam.avatar = data.response.players[0].avatar
@@ -178,9 +179,14 @@ const adminPanel = Vue.createApp({
             this.weaponspage = false
             this[vari] = true
         },
-        pmaControl() {
-            if (UMAdmin.PMAVoice) {
-                this.togglemute = true
+        configControl() {
+            switch (true) {
+                case this.configsettings.pmaVoice:
+                    this.togglemute = true 
+                    break;
+                case this.configsettings.opacity:
+                    document.documentElement.style.setProperty("--black", "#0a0a0ab3");
+                    break;
             }
         },
     },
@@ -194,7 +200,7 @@ const adminPanel = Vue.createApp({
     mounted() {
         window.addEventListener('message', this.eventHandler);
         document.addEventListener('keyup', this.keyupHandler);
-        this.pmaControl();
+        this.configControl();
     },
     beforeUnmount() {
         window.removeEventListener('message', this.eventHandler);

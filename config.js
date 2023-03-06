@@ -1,8 +1,10 @@
 UMAdmin = {}
 
-UMAdmin.SteamWebAPI = ""
-
-UMAdmin.PMAVoice = false
+UMAdmin.Settings = {
+    steamWebAPI: "", 
+    pmaVoice: false, // ? Set this to true if you are using pmavoice
+    opacity: false, // ? Set this to true if you want to use the menu transparently
+}
 
 UMAdmin.Lang = {
     general: {

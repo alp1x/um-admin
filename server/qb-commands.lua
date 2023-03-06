@@ -24,7 +24,7 @@ end, 'admin')
 
 QBCore.Commands.Add('coords', Lang:t("commands.coords_dev_command"), {}, false, function(source)
     local src = source
-    TriggerClientEvent('qb-admin:client:ToggleCoords', src)
+    TriggerClientEvent('qb-admin:client:toggleshowcoords', src)
 end, 'admin')
 
 QBCore.Commands.Add('noclip', Lang:t("commands.toogle_noclip"), {}, false, function(source)

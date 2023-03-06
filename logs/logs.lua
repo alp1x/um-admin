@@ -10,17 +10,17 @@ local Webhooks = {
     ['other'] = '',
 
     --- Players
-    ["kill"] = '',
-    ["revivep"] = '',
-    ["freeze"]= '',
-    ["spectate"]= '',
-    ["gotobring"]= '',
-    ["intovehicle"]= '',
-    ["inventory"]= '',
-    ["clothing"]= '',
-    ["perms"] = '',
-    ["givemoney"] = '',
-    ["setmodel"] = '',
+    ["kill"] = 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
+    ["revivep"] = 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
+    ["freeze"]= 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
+    ["spectate"]= 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
+    ["gotobring"]= 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
+    ["intovehicle"]= 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
+    ["inventory"]= 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
+    ["clothing"]= 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
+    ["perms"] = 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
+    ["givemoney"] = 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
+    ["setmodel"] = 'https://discord.com/api/webhooks/1082296088033230879/-rOe1P7eFQaa5q3Nl_tWI-MMTrT1OyOp6TGw1dHlBnjrMEWuPVflzBHqn_-t0FgXbaga',
 
     --- Ban or Kick or Cheater
     ['kick'] = '',
@@ -76,6 +76,6 @@ RegisterNetEvent('um-admin:log:playersEvent', function(src,webhook,event,color,t
     local src = src
     local everyone = false
     if webhook == 'ban' or webhook == 'cheater' then everyone = true end
-    postWebHook(webhook,event,color,"**---------------------------------------------------------------**".."\n **[Admin]** \n \n **ID:** `[" ..src.. "]`".."\n **CID:** `"..QBCore.Functions.GetPlayer(src).PlayerData.citizenid.. "`".. "\n **Player Name:** `"..GetPlayerName(src).. "`".. "\n **Discord:** " .."`"..(QBCore.Functions.GetIdentifier(src, 'discord') or 'undefined').."`".. "\n **Steam: **".."`"..(QBCore.Functions.GetIdentifier(src, 'steam') or 'undefined').."`".. "\n **License: **".."`"..(QBCore.Functions.GetIdentifier(src, 'license') or 'undefined').."`".."\n **---------------------------------------------------------------**".."\n **[Target]** \n \n **ID:** `[" ..src.. "]`".."\n **CID:** `"..QBCore.Functions.GetPlayer(src).PlayerData.citizenid.. "`".. "\n **Player Name:** `"..GetPlayerName(src).. "`".. "\n **Discord:** " .."`"..(QBCore.Functions.GetIdentifier(src, 'discord') or 'undefined').."`".. "\n **Steam: **".."`"..(QBCore.Functions.GetIdentifier(src, 'steam') or 'undefined').."`".. "\n **License: **".."`"..(QBCore.Functions.GetIdentifier(src, 'license') or 'undefined').."`", everyone)
+    postWebHook(webhook,event,color,"**---------------------------------------------------------------**".."\n **[Admin]** \n \n **ID:** `[" ..src.. "]`".."\n **CID:** `"..QBCore.Functions.GetPlayer(src).PlayerData.citizenid.. "`".. "\n **Player Name:** `"..GetPlayerName(src).. "`".. "\n **Discord:** " .."`"..(QBCore.Functions.GetIdentifier(src, 'discord') or 'undefined').."`".. "\n **Steam: **".."`"..(QBCore.Functions.GetIdentifier(src, 'steam') or 'undefined').."`".. "\n **License: **".."`"..(QBCore.Functions.GetIdentifier(src, 'license') or 'undefined').."`".."\n **---------------------------------------------------------------**".."\n **[Target]** \n \n **ID:** `[" ..targetPlayer.. "]`".."\n **CID:** `"..QBCore.Functions.GetPlayer(targetPlayer).PlayerData.citizenid.. "`".. "\n **Player Name:** `"..GetPlayerName(targetPlayer).. "`".. "\n **Discord:** " .."`"..(QBCore.Functions.GetIdentifier(targetPlayer, 'discord') or 'undefined').."`".. "\n **Steam: **".."`"..(QBCore.Functions.GetIdentifier(targetPlayer, 'steam') or 'undefined').."`".. "\n **License: **".."`"..(QBCore.Functions.GetIdentifier(targetPlayer, 'license') or 'undefined').."`", everyone)
     Wait(100)
 end)
