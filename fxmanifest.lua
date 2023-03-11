@@ -33,3 +33,9 @@ files {
 }
 
 lua54 'yes'
+
+dependencies {
+    '/server:5848',
+    '/onesync',
+    'qb-core'
+}
